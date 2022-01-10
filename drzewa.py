@@ -250,8 +250,8 @@ class Drzewo:
             mode = 'lines',
             line = dict(color = 'rgb(10,50,150)',width = 1))
             fig.add_trace(tmp)
-        fig.show()
-        fig.write_html('tmp2.html')
+        #fig.show()
+        fig.write_html('tmp2.html',auto_open = True)
 
 
     glebokosci = {}
