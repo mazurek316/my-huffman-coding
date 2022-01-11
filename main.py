@@ -1,37 +1,29 @@
 import numpy as np
 from drzewa import *
-word = 'aaaaacccccccccccccccccccccggggeeeeeeeeef'
+word = 'Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.'
 occursions = {}
 prawdopodobienstwa = {}
 for i in word:
     occursions.update({i:word.count(i)})
-    prawdopodobienstwa.update({i:occursions[i]/len(word)})
 
-prawdopodobienstwa_do_liczenia = [*prawdopodobienstwa.values()]
-
+def TreeListSort(tree_list):
+    return sorted(tree_list,key= lambda  x: x.ZwrocKorzen()[1])
 
 def Huffman(slowo):
-    occursions = {}
-    prawdopodobienstwa = {}
-    for i in slowo:
-        occursions.update({i:slowo.count(i)})
-        prawdopodobienstwa.update({i:occursions[i]/len(slowo)})
-    drzewa_huffmana = {}
-    tmp_drzewa = []
-    for i in prawdopodobienstwa.values():
-        tmp_drzewo = Drzewo(str(i))
-        drzewa_huffmana.update({i:tmp_drzewo})
-        tmp_drzewa.append(i)
-    tmp_drzewa.sort()
-    tmp_drzewa2 = []
-    for i in tmp_drzewa:
-        tmp_drzewa2.append(drzewa_huffmana[i])
-    
-    while len(tmp_drzewa2) > 1:
-        #print(tmp_drzewa2[0].ZwrocKorzen(),tmp_drzewa2[1].ZwrocKorzen())
-        nowe_drzewo = tmp_drzewa2[0].DodawanieDrzew(tmp_drzewa2[1])
-        tmp_drzewa2.pop(0)
-        tmp_drzewa2.pop(0)
-        tmp_drzewa2.append(nowe_drzewo)
-    tmp_drzewa2[0].Generator_wykresu()
+    drzewa_symboli = []
+    for symbole in occursions.keys():
+        drzewa_symboli.append(Drzewo((symbole,occursions[symbole])))
+    #drzewa_symboli.sort(key = lambda x:x[1].ZwrocKorzen())
+    posortowane_drzewa = TreeListSort(drzewa_symboli)
+
+    while len(posortowane_drzewa) > 1:
+        nowe_drzewo = posortowane_drzewa[0].DodawanieDrzew(posortowane_drzewa[1])
+        posortowane_drzewa.pop(0)
+        posortowane_drzewa.pop(0)
+        posortowane_drzewa.append(nowe_drzewo)
+
+        posortowane_drzewa = TreeListSort(posortowane_drzewa)
+
+    #print(posortowane_drzewa[0].ZwrocDzieci(('afg',10)))
+    posortowane_drzewa[0].Generator_wykresu()
 Huffman(word)
