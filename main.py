@@ -1,85 +1,39 @@
-import math
-from drzewa import *
-file = open('dane.txt','rt')
+import numpy as np
+from drzewa_serie import *
+from two_side_list import *
+filename = input("podaj nazwe pliku: ")
+word = ''
+file = open(filename,'r')
 word = file.read()
 file.close()
+
+print(word)
+
 occursions = {}
-prawdopodobienstwa = {}
 for i in word:
-
     occursions.update({i:word.count(i)})
-occursions.update({'SPACE':occursions[' ']})
-occursions.pop(' ')
 
-def TreeListSort(tree_list):
-    return sorted(tree_list,key= lambda  x: x.ZwrocKorzen()[1])
-
-def Zakodowanie_danych(dane,kody):
-    zakodowane = []
-    for i in dane:
-        zakodowane.append(kody[i])
-    #wynik = ''.join([str(i) for i in zakodowane])
-    wynik = ''.join([str(i) for i in zakodowane])
-    #print(len(wynik)/8)
-    wynik_bytes = int(wynik,2).to_bytes(math.ceil(len(wynik)/8),'little')
-    return wynik_bytes
-
-
-
-
-
-
-
-def Huffman(slowo):
+def SimpleHuffman(slowo):
     drzewa_symboli = []
     for symbole in occursions.keys():
-        drzewa_symboli.append(Drzewo((symbole,occursions[symbole])))
+        tmp = Drzewo_huffmana(symbole,occursions[symbole])
+        drzewa_symboli.append(tmp)
 
-    #drzewa_symboli.sort(key = lambda x:x[1].ZwrocKorzen())
-    posortowane_drzewa = TreeListSort(drzewa_symboli)
+    drzewa_symboli.sort(key= lambda x: x.dane)
+    for i in drzewa_symboli: i.DFS(i)
+    while len(drzewa_symboli) > 1:
 
-    while len(posortowane_drzewa) > 1:
-        nowe_drzewo = posortowane_drzewa[0].DodawanieDrzew(posortowane_drzewa[1])
-        posortowane_drzewa.pop(0)
-        posortowane_drzewa.pop(0)
-        posortowane_drzewa.append(nowe_drzewo)
+        nowe_dane = drzewa_symboli[0].dane + drzewa_symboli[1].dane
+        nowe_drzewo = Drzewo_huffmana(None,nowe_dane,drzewa_symboli[0],drzewa_symboli[1])
+        drzewa_symboli.append(nowe_drzewo)
+        drzewa_symboli.pop(0)
+        drzewa_symboli.pop(0)
+        drzewa_symboli.sort(key = lambda x: x.dane)
+    koncowe = drzewa_symboli[0]
+    koncowe.DFS_with_kids(koncowe.lewy)
+    koncowe.Krawedzie(koncowe)
+    print(koncowe.Krawedzie_test())
 
-        posortowane_drzewa = TreeListSort(posortowane_drzewa)
 
-    #print(posortowane_drzewa[0].ZwrocDzieci(('afg',10)))
-    #posortowane_drzewa[0].Generator_wykresu()
-    koncowe = posortowane_drzewa[0]
 
-    #koncowe.Generator_wykresu()
-    #print(koncowe.ZwrocDzieci(('wo',2)))
-    koncowe.OznaczanieWezla(koncowe.ZwrocKorzen(),'')
-    kody = koncowe.ZwrocKody()
-    #print(kody)
-    result = Zakodowanie_danych(slowo,kody)
-    file = open('dane_koncowe.txt','wb')
-    file.write(result)
-    file.close()
-
-    print('poczatkowe slowo w bajtach: ',len(slowo))
-    print('koncowe w bajtach: ',len(result))
-    return kody
-slownik = Huffman(word)
-def Dekodowanie_huffmana(plik,dictionary):
-    file = open(plik,'rb')
-    zakodowana = file.read()
-    file.close()
-    decoded = format(int.from_bytes(zakodowana,'little'),'023b')
-
-    res = ""
-    while decoded:
-        for k in dictionary:
-            if decoded.startswith(dictionary[k]):
-                res += k
-                decoded = decoded[len(dictionary[k]):]
-    return res
-
-zdekodowana = Dekodowanie_huffmana('dane_koncowe.txt',slownik)
-
-dekodowany_plik = open('odkowanane.txt','wt')
-dekodowany_plik.write(zdekodowana)
-dekodowany_plik.close()
+SimpleHuffman(word)
