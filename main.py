@@ -10,11 +10,30 @@ word = file.read()
 file.close()
 
 print(word)
-
+print(len(word))
 occursions = {}
 for i in word:
     occursions.update({i:word.count(i)})
+def FindPlace(data,frequency):
+    flag = 0
+    for i in range(len(data)):
+        if data[i].freq.dane >= frequency:
 
+            flag = i - 1
+            return flag
+        else:
+            continue
+    print('nie znaleziono większego')
+    return len(data)-1
+
+
+def CreateHuffmanTree(nodes_list):
+    tmp_znak = '_'
+    head = nodes_list[0]
+    tail = nodes_list[-1]
+    while head != tail:
+        nowe_dane = head.freq.dane + head.next.freq.dane
+    return nodes_list
 def SimpleHuffman(slowo):
     drzewa_symboli = []
     for symbole in occursions.keys():
@@ -22,36 +41,27 @@ def SimpleHuffman(slowo):
         drzewa_symboli.append(tmp)
 
     drzewa_symboli.sort(key= lambda x: x.dane)
-    for i in drzewa_symboli: i.DFS(i)
+    zestaw_list = []
+    for i in drzewa_symboli:
+        tmp = HuffmanList(i)
+        zestaw_list.append(tmp)
+    for i in range(len(zestaw_list)):
+        try:
+            zestaw_list[i].next = zestaw_list[i+1]
+            zestaw_list[i].previous = zestaw_list[i-1]
+        except IndexError:
+            if i == 0:
+                zestaw_list[i].next = zestaw_list[i+1]
+                zestaw_list[i].previous = None
+            if i == len(zestaw_list)-1:
+                zestaw_list[i].next = None
+                zestaw_list[i].previous = zestaw_list[i-1]
+    ostateczna = CreateHuffmanTree(zestaw_list)
     tmp_znak = ''
-    while len(drzewa_symboli) > 1:
+    #print(ostateczna)
+    ostateczna.DFS(ostateczna)
 
-        if drzewa_symboli[0].dane == drzewa_symboli[1].dane:
-            #print(drzewa_symboli[0].znak,drzewa_symboli[1].znak+str(drzewa_symboli[1].dane))
-            drzewa_symboli[0],drzewa_symboli[1] = drzewa_symboli[1],drzewa_symboli[0]
-            nowe_dane = drzewa_symboli[0].dane + drzewa_symboli[1].dane
-            nowe_drzewo = Drzewo_huffmana(tmp_znak, nowe_dane, drzewa_symboli[0], drzewa_symboli[1])
-            drzewa_symboli.append(nowe_drzewo)
-            drzewa_symboli.pop(0)
-            drzewa_symboli.pop(0)
 
-            drzewa_symboli.sort(key=lambda x: x.dane)
-            tmp_znak += ' '
-        else:
-            nowe_dane = drzewa_symboli[0].dane + drzewa_symboli[1].dane
-            nowe_drzewo = Drzewo_huffmana(tmp_znak, nowe_dane, drzewa_symboli[0], drzewa_symboli[1])
-            drzewa_symboli.append(nowe_drzewo)
-            drzewa_symboli.pop(0)
-            drzewa_symboli.pop(0)
-            drzewa_symboli.sort(key=lambda x: x.dane)
-            tmp_znak += ' '
-    koncowe = drzewa_symboli[0]
-    #koncowe.DFS_with_kids(koncowe)
-    #koncowe.Krawedzie(koncowe)
-    #print(koncowe.Krawedzie_test())
-    first_code = ''
-    kody = {}
-    kody = drzewa_serie.OznaczWezel(koncowe,first_code,kody)
-    drzewa_serie.DFS_all(koncowe,kody)
+
 
 SimpleHuffman(word)

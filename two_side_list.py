@@ -1,5 +1,5 @@
-class List:
+class HuffmanList:
     def __init__(self,data,nast = None,poprzedni = None):
         self.freq = data
-        self.nastepny = nast
-        self.popprzedni = poprzedni
+        self.next = nast
+        self.previous = poprzedni

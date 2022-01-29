@@ -6,6 +6,9 @@ class Drzewo_huffmana:
         self.lewy = lewy
         self.prawy = prawy
         self.ojciec = ojciec
+    def DodajDrzewo(self,znak, other):
+        new_tree = Drzewo_huffmana(znak,self.dane+other.dane,self,other)
+        return new_tree
     def DFS(self,wezel):
         if wezel:
             print(wezel.dane)
