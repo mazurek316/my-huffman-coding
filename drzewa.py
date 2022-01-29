@@ -26,18 +26,15 @@ class Drzewo:
         self.drzewo[dane].append(None) #adres ojca
         self.drzewo[dane].append(None) #adres lewego syna
         self.drzewo[dane].append(None) # adres prawego syna
-    
+    iterator = 0
     def DodawanieDrzew(self,drugie_drzewo):
-        def FormatowaieDanych(data1,data2):
-            i = 0
-            if len(data1[0]+data2[0]) > 1:
-                i += 1
-                return '-'*i
+
+
         dane1 = [*self.drzewo][0]
         dane2 = [*drugie_drzewo.drzewo][0]
 
         nowe_dane = dane1[1] + dane2[1]
-        nowe_drzewo = Drzewo((FormatowaieDanych(dane1,dane2),nowe_dane))
+        nowe_drzewo = Drzewo((dane1[0]+dane2[0],nowe_dane))
         if dane1[1] >= dane2[1]:
             nowe_drzewo.DodajDrzewozPrawej(self)
             nowe_drzewo.DodajDrzewozLewej(drugie_drzewo)
@@ -59,7 +56,7 @@ class Drzewo:
             else:
                 tmp_ojciec = drzewo_z_lewej.drzewo[i][0]
                 if i in [*self.drzewo]:
-                    print(i,tmp_ojciec,"dodaj z lewej")
+                    #print(i,tmp_ojciec,"dodaj z lewej")
                     tmp_i = (i[0],i[1]+0.1)
                     if drzewo_z_lewej.drzewo[tmp_ojciec][1] == i:
                         self.drzewo[tmp_ojciec][1] = tmp_i
@@ -78,6 +75,7 @@ class Drzewo:
                         self.drzewo[i].append(None)
                         self.drzewo[i].append(None)
                     if drzewo_z_lewej.drzewo[tmp_ojciec][2] == i:
+                        #print(i,self.drzewo[tmp_ojciec])
                         self.drzewo[tmp_ojciec][2] = i
                         self.drzewo[i].append(tmp_ojciec)
                         self.drzewo[i].append(None)
@@ -96,7 +94,7 @@ class Drzewo:
             else:
                 tmp_ojciec = drzewo_z_prawej.drzewo[i][0]
                 if i in [*self.drzewo]:
-                    print(i,tmp_ojciec,'z prawej')
+                    #print(i,tmp_ojciec,'z prawej')
                     tmp_i = (i[0],i[1]+0.1)
                    # print(drzewo_z_prawej.ZwrocDzieci(tmp_ojciec))
                     if drzewo_z_prawej.drzewo[tmp_ojciec][1] == i:
@@ -106,7 +104,7 @@ class Drzewo:
                         self.drzewo[tmp_i].append(None)
                         self.drzewo[tmp_i].append(None)
                     if drzewo_z_prawej.drzewo[tmp_ojciec][2] == i:
-                        print('prawy syn prawego')
+                        #print('prawy syn prawego')
                         self.drzewo[tmp_ojciec][2] = tmp_i
                         self.drzewo[tmp_i].append(tmp_ojciec)
                         self.drzewo[tmp_i].append(None)
@@ -176,115 +174,124 @@ class Drzewo:
         Y_krawedzie = [] #współrzędne y linii 
         self.Wszystkie_Glebokosci(węzły[0])
         wysokosc = (max(self.glebokosci.values())) + 2
-        szerokosc = wysokosc + 1
+        szerokosc = wysokosc + 10
         X_wierzcholki = {}
         
         def wspolrzedne_x(wezel,X_w):
-            if self.drzewo[wezel]:            
-                if self.drzewo[wezel][0] is None:
-                    X_w.update({wezel:szerokosc - self.glebokosci[węzły[0]]})
-                    return szerokosc - self.glebokosci[węzły[0]]
-                else:
-                    print("Zaczęto")
-                    # ojciec = self.drzewo[wezel][0]
-                    #
-                    # x_ojca = X_w[ojciec]
-                    # if wezel == self.drzewo[ojciec][1]:
-                    #     tmp = x_ojca - 1
-                    #     poprzednik = [*X_w][-1]
-                    #     #print(poprzednik)
-                    #     if self.glebokosci[poprzednik] > 2 and self.glebokosci[poprzednik] == self.glebokosci[wezel]:
-                    #         #print(wezel,poprzednik,self.glebokosci[poprzednik],ojciec)
-                    #         if poprzednik == self.drzewo[ojciec][1]:
-                    #             if tmp < X_w[poprzednik] + 0.1:
-                    #                 print(X_w[poprzednik])
-                    #                 tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
-                    #                 X_w.update({wezel: tmp})
-                    #                 return tmp  # Dokończyć błąd z przeskakiwaniem
-                    #             else:
-                    #                 if tmp < X_w[poprzednik] + 0.1:
-                    #                     print(X_w[poprzednik])
-                    #                     tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp
-                    #                 else:
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp
-                    #         else:
-                    #             if tmp < X_w[poprzednik] - 0.03:
-                    #                 # print(X_w[poprzednik])
-                    #                 tmp = random.uniform(X_w[poprzednik] - 0.3, X_w[poprzednik] - 0.5)
-                    #                 X_w.update({wezel: tmp})
-                    #                 return tmp  # Dokończyć błąd z przeskakiwaniem
-                    #             else:
-                    #
-                    #                 X_w.update({wezel: tmp})
-                    #                 return tmp
-                    #     else:
-                    #         if tmp in X_w.values():
-                    #             tmp = random.uniform(tmp,x_ojca)
-                    #             X_w.update({wezel:tmp})
-                    #             return tmp
-                    #         else:
-                    #
-                    #             X_w.update({wezel:tmp})
-                    #             return tmp
-                    # elif wezel == self.drzewo[ojciec][2]:
-                    #     tmp = x_ojca + 0.6
-                    #     poprzednik = [*X_w][-1]
-                    #     if self.glebokosci[poprzednik] > 2 and self.glebokosci[poprzednik] == self.glebokosci[wezel]:
-                    #         if tmp < X_w[poprzednik]:
-                    #             if poprzednik == self.drzewo[ojciec][1]:
-                    #                 tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
-                    #                 if tmp in X_w.values():
-                    #                     tmp = random.uniform(tmp, x_ojca)
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp
-                    #                 else:
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp  # Dokończyć błąd z przeskakiwaniem
-                    #             else:
-                    #                 tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
-                    #                 if tmp in X_w.values():
-                    #                     tmp = random.uniform(tmp, x_ojca)
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp
-                    #                 else:
-                    #                     X_w.update({wezel: tmp})
-                    #                     return tmp  # Dokończyć błąd z przeskakiwaniem
-                    #         else:
-                    #             X_w.update({wezel:tmp})
-                    #             return tmp
-                    #     else:
-                    #         if tmp in X_w.values():
-                    #                 tmp = random.uniform(tmp,x_ojca)
-                    #                 X_w.update({wezel:tmp})
-                    #                 return tmp
-                    #         else:
-                    #             X_w.update({wezel:tmp})
-                    #             return tmp
+
+
+
+                    ojciec = self.drzewo[wezel][0]
+                    if ojciec is None:
+                        tmp = szerokosc / 2
+                        X_w.update({wezel:tmp})
+                        return tmp
+
+                    x_ojca = X_w[ojciec]
+                    if wezel == self.drzewo[ojciec][1]:
+                        tmp = x_ojca - 1
+                        poprzednik = [*X_w][-1]
+                        #print(poprzednik)
+                        if self.glebokosci[poprzednik] > 2 and self.glebokosci[poprzednik] == self.glebokosci[wezel]:
+                            #print(wezel,poprzednik,self.glebokosci[poprzednik],ojciec)
+                            if poprzednik == self.drzewo[ojciec][1]:
+                                if tmp < X_w[poprzednik] + 0.1:
+                                    print(X_w[poprzednik])
+                                    tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
+                                    X_w.update({wezel: tmp})
+                                    return tmp  # Dokończyć błąd z przeskakiwaniem
+                                else:
+                                    if tmp < X_w[poprzednik] + 0.1:
+                                        print(X_w[poprzednik])
+                                        tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
+                                        X_w.update({wezel: tmp})
+                                        return tmp
+                                    else:
+                                        X_w.update({wezel: tmp})
+                                        return tmp
+                            else:
+                                if tmp < X_w[poprzednik] - 0.03:
+                                    # print(X_w[poprzednik])
+                                    tmp = random.uniform(X_w[poprzednik] - 0.3, X_w[poprzednik] - 0.5)
+                                    X_w.update({wezel: tmp})
+                                    return tmp  # Dokończyć błąd z przeskakiwaniem
+                                else:
+
+                                    X_w.update({wezel: tmp})
+                                    return tmp
+                        else:
+                            if tmp in X_w.values():
+                                tmp = random.uniform(tmp,x_ojca)
+                                X_w.update({wezel:tmp})
+                                return tmp
+                            else:
+
+                                X_w.update({wezel:tmp})
+                                return tmp
+                    elif wezel == self.drzewo[ojciec][2]:
+                        tmp = x_ojca + 0.6
+                        poprzednik = [*X_w][-1]
+                        if self.glebokosci[poprzednik] > 2 and self.glebokosci[poprzednik] == self.glebokosci[wezel]:
+                            if tmp < X_w[poprzednik]:
+                                if poprzednik == self.drzewo[ojciec][1]:
+                                    tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
+                                    if tmp in X_w.values():
+                                        tmp = random.uniform(tmp, x_ojca)
+                                        X_w.update({wezel: tmp})
+                                        return tmp
+                                    else:
+                                        X_w.update({wezel: tmp})
+                                        return tmp  # Dokończyć błąd z przeskakiwaniem
+                                else:
+                                    tmp = random.uniform(X_w[poprzednik] + 0.3, X_w[poprzednik] + 0.5)
+                                    if tmp in X_w.values():
+                                        tmp = random.uniform(tmp, x_ojca)
+                                        X_w.update({wezel: tmp})
+                                        return tmp
+                                    else:
+                                        X_w.update({wezel: tmp})
+                                        return tmp  # Dokończyć błąd z przeskakiwaniem
+                            else:
+                                X_w.update({wezel:tmp})
+                                return tmp
+                        else:
+                            if tmp in X_w.values():
+                                    tmp = random.uniform(tmp,x_ojca)
+                                    X_w.update({wezel:tmp})
+                                    return tmp
+                            else:
+                                X_w.update({wezel:tmp})
+                                return tmp
 
 
         Y_w = {}
         X_data = []
-        # for i in self.drzewo.keys():
-        #     #print(i)
+        # for i in reversed(self.glebokosci):
         #     if i is None:
         #         continue
         #     else:
-        #
-        #         #X_data += [X_wierzcholki[i]]
-        #
+        #         print(i,self.glebokosci[i])
         #         X_data.append(wspolrzedne_x(i,X_wierzcholki))
         #         Y_w.update({i:wysokosc - self.glebokosci[i]})
-        #         Y_wierzcholki += [wysokosc - self.glebokosci[i]]
+        #         Y_wierzcholki +=[wysokosc - self.glebokosci[i]]
+        for i in self.drzewo.keys():
+            #print(i)
+            if i is None:
+                continue
+            else:
+                #print(i,self.drzewo[i])
+                #X_data += [X_wierzcholki[i]]
+
+                X_data.append(wspolrzedne_x(i,X_wierzcholki))
+                Y_w.update({i:wysokosc - self.glebokosci[i]})
+                Y_wierzcholki += [wysokosc - self.glebokosci[i]]
 
         self.Krawedzie(węzły[0])
-        
+
         for k in self.krawedzie.items():
             for j in k[1]:
                 X_krawedzie.append([X_wierzcholki[k[0]],X_wierzcholki[j]])
-                Y_krawedzie.append([Y_w[k[0]],Y_w[j]]) 
+                Y_krawedzie.append([Y_w[k[0]],Y_w[j]])
         
         
         #print(Y_wierzcholki)
@@ -307,8 +314,8 @@ class Drzewo:
             mode = 'lines',
             line = dict(color = 'rgb(10,50,150)',width = 1))
             fig.add_trace(tmp)
-        #fig.show()
-        fig.write_html('tmp2.html',auto_open = True)
+        fig.show()
+        #fig.write_html('tmp2.html',auto_open = True)
 
 
     glebokosci = {}
@@ -317,10 +324,11 @@ class Drzewo:
 
     def DFS(self,wezel):
         if self.drzewo[wezel]:
-            print (wezel)
+            print (wezel,self.kody_huffmana[wezel])
             
             self.DFS(self.drzewo[wezel][1])
             self.DFS(self.drzewo[wezel][2])
+    dfs_wezly = []
 
     def TablicaWezlow(self,wezel): # Naprawić dziwne tworzenie węzłów
         if self.drzewo[wezel]:
@@ -381,7 +389,57 @@ class Drzewo:
         return 0
     def ZwrocKorzen(self):
         return [*self.drzewo][0]
-    def OznaczanieWezlow(self):
-        for i in self.drzewo.keys():
-            print(i)
+    kody_huffmana = {}
+    def OznaczanieWezla(self,wezel,tmp):
+        if self.drzewo[wezel]:
+            ojciec = self.drzewo[wezel][0]
+            if ojciec is None:
+                self.OznaczanieWezla(self.drzewo[wezel][1], tmp)
+                self.OznaczanieWezla(self.drzewo[wezel][2], tmp)
+            else:
+                #print(wezel)
+                if wezel == self.drzewo[ojciec][1]:
+                    tmp += '0'
+                    if wezel in self.kody_huffmana:
+                        return None
+                    else:
+                        self.kody_huffmana.update({wezel:tmp})
+
+                else:
+                    tmp += '1'
+                    if wezel in self.kody_huffmana:
+                        return None
+                    else:
+                        self.kody_huffmana.update({wezel:tmp})
+                self.OznaczanieWezla(self.drzewo[wezel][1], tmp)
+                self.OznaczanieWezla(self.drzewo[wezel][2], tmp)
+    def ZwrocKody(self):
+        klucze_do_usuniecia = []
+        for i in self.kody_huffmana.keys():
+            if len(i[0]) > 1 and i[0] != 'SPACE' and i[0] != '\n':
+                klucze_do_usuniecia.append(i)
+        for i in klucze_do_usuniecia:
+            self.kody_huffmana.pop(i)
+        nowe_kody = dict()
+        tmp = None
+        for i in self.kody_huffmana.keys():
+            tmp = i[0]
+            nowe_kody.update({tmp:self.kody_huffmana[i]})
+        nowe_kody.update({' ':nowe_kody['SPACE']})
+        nowe_kody.pop('SPACE')
+        return nowe_kody
+        # elif wezel == self.drzewo[ojciec][1]:
+        #     if self.kody_huffmana[wezel]:
+        #         tmp = self.kody_huffmana[wezel]
+        #         self.kody_huffmana.update({wezel:tmp+'0'})
+        #     else:
+        #         self.kody_huffmana.update({wezel:'0'})
+        # elif wezel == self.drzewo[ojciec][2]:
+        #     if self.kody_huffmana[wezel]:
+        #         tmp = self.kody_huffmana[wezel]
+        #         self.kody_huffmana.update({wezel:tmp+'1'})
+        #     else:
+        #         self.kody_huffmana.update({wezel:'1'})
+
+
 
