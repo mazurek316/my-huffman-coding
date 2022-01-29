@@ -39,3 +39,24 @@ class Drzewo_huffmana:
         Y_wierzcholki = []
         X_krawedzie = []
         Y_krawedzie = []
+
+
+def OznaczWezel(wezel,oznaczenie,codes):
+    #print(wezel.znak,oznaczenie)
+    if wezel is not None:
+        codes.update({wezel.znak:oznaczenie})
+        if wezel.lewy is not None:
+            OznaczWezel(wezel.lewy, oznaczenie + '0',codes)
+        if wezel.prawy is not None:
+            OznaczWezel(wezel.prawy, oznaczenie + '1',codes)
+
+    return codes
+def DFS_all(wezel,oznaczenia):
+    if wezel is not None:
+        print(wezel.dane,wezel.znak,oznaczenia[wezel.znak])
+
+        DFS_all(wezel.lewy,oznaczenia)
+        DFS_all(wezel.prawy,oznaczenia)
+
+
+
