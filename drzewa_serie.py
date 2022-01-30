@@ -7,11 +7,13 @@ class Drzewo_huffmana:
         self.prawy = prawy
         self.ojciec = ojciec
     def Dodaj(self,znak, other):
-        new_tree = Drzewo_huffmana(znak,self.dane+other.dane,self,other)
+        new_data = (self.dane[0] + other.dane[0],-1)
+
+        new_tree = Drzewo_huffmana(znak,new_data,self,other)
         return new_tree
     def DFS(self,wezel):
         if wezel:
-            print(wezel.dane)
+            print(wezel.znak,wezel.dane)
             self.DFS(wezel.lewy)
             self.DFS(wezel.prawy)
     def DFS_with_kids(self,wezel):
@@ -47,7 +49,15 @@ class Drzewo_huffmana:
 def OznaczWezel(wezel,oznaczenie,codes):
     #print(wezel.znak,oznaczenie)
     if wezel is not None:
-        codes.update({wezel.znak:oznaczenie})
+        if wezel.dane[1] > 1:
+            codes.update({wezel.znak*wezel.dane[1]:oznaczenie})
+        elif wezel.dane[1] == -1:
+            if wezel.lewy is not None:
+                OznaczWezel(wezel.lewy, oznaczenie + '0', codes)
+            if wezel.prawy is not None:
+                OznaczWezel(wezel.prawy, oznaczenie + '1', codes)
+        else:
+            codes.update({wezel.znak:oznaczenie})
         if wezel.lewy is not None:
             OznaczWezel(wezel.lewy, oznaczenie + '0',codes)
         if wezel.prawy is not None:
@@ -56,7 +66,7 @@ def OznaczWezel(wezel,oznaczenie,codes):
     return codes
 def DFS_all(wezel,oznaczenia):
     if wezel is not None:
-        print(wezel.dane,wezel.znak,oznaczenia[wezel.znak])
+        print(wezel.znak,wezel.dane[1],oznaczenia[wezel.znak])
 
         DFS_all(wezel.lewy,oznaczenia)
         DFS_all(wezel.prawy,oznaczenia)

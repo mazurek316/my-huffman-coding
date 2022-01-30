@@ -12,6 +12,8 @@ class DataRec:
         self.runLen = runLength
         self.freq = frequency
     def __eq__(self, other):
+        if self.symbol == ' ' and other.symbol == ' ':
+            return True
         return self.symbol == other.symbol and self.runLen == other.runLen
     def __lt__(self, other):
         return self.freq < other.freq
